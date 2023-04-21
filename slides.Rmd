@@ -1,0 +1,216 @@
+---
+title: "Akka is not going anywhere"
+subtitle: "<br/>Amsterdam Scala Meetup"
+author: "Zhenhao Li"
+institute: "PairTime"
+date: "2023/04/20 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+class: center, middle
+
+# About Me
+
+1. Founder of [PairTime](https://pairtime.com)
+
+--
+
+2. Big data consultant
+
+--
+
+3. I Like hiking, bouldering, CrossFit
+
+---
+class: inverse, center, middle
+
+# Outline
+
+1. Introduction to Akka
+2. Why Akka is irreplaceable at PairTime
+3. How Akka makes you a better engineer
+
+
+---
+class: middle
+
+# Introduction to Akka
+
+- High-level overview
+- Actor model and actor systems
+- Concurrency and fault tolerance
+- Event Sourcing
+
+---
+class: middle
+
+# High-level Overview (credit: chatGPT)
+
+- Akka: An open-source toolkit and runtime for building highly concurrent, distributed, and fault-tolerant systems
+- Based on the Actor model
+- Implemented in Scala (and Java)
+- Excellent for handling large-scale, stateful applications
+
+---
+class: middle
+
+# Actors
+
+- Fundamental unit of computation in Akka
+
+--
+
+- Represent objects or entities in your system
+--
+
+- Encapsulate state and behavior
+
+--
+
+- Communicate exclusively through messages
+
+--
+
+- Single-threaded illusion
+
+---
+class: middle
+
+# Concurrency and Fault Tolerance
+
+- Akka handles concurrency efficiently using message-passing
+
+--
+
+- Actors can be distributed across multiple nodes
+
+--
+
+- Location-transparent messaging enables scaling and fault tolerance
+
+--
+
+- Supervision and actor hierarchies support self-healing systems
+
+
+---
+class: middle
+# Event Sourcing
+
+- Event Sourcing: State is a `foldLeft` of sequence of events
+
+--
+
+- Akka Persistence gives us event-sourced actors
+
+--
+
+- Persistent actors store events in an event journal
+
+--
+
+- Event journals can be used for recovery, replication, and historical analysis
+
+--
+
+- Supports various storage backends, such as Cassandra and PostgreSQL
+
+
+---
+class: inverse, middle
+
+# Why Akka is Irreplaceable at PairTime
+
+- We want to use domain driven design and event sourcing
+
+--
+
+- We want fearless iteration (deploy to production at anytime)
+
+--
+
+- Without user disruption
+
+--
+
+- Akka enables zero-downtime rolling deployments:
+  - Cluster sharding: Distribute actors across nodes
+  - Location transparency: Actors can move between nodes seamlessly
+  - Graceful shutdown: Migrate actors to other nodes before stopping a node
+  - Gossip Protocol:  Fast failure detection
+
+---
+
+background-image: url(https://petabridge.com/images/2017/cluster-sharding-overview/sharded-system.png)
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+Image credit: [Bartosz Sypytkowski](https://petabridge.com/blog/cluster-sharding-technical-overview-akkadotnet/)
+
+---
+
+class: inverse, middle
+
+# How Akka Makes You a Better Engineer
+
+- Learning displined OO
+
+--
+
+- Learning event sourcing
+
+--
+
+- Understanding resilience and fault tolerance
+
+--
+
+- Focussing on domain modeling 
+
+--
+
+- Applying Akka knowledge to other frameworks and languages
+
+---
+
+# Azure Durable Functions
+
+```python
+# Python example
+import azure.functions as func
+import azure.durable_functions as df
+
+
+def entity_function(context: df.DurableEntityContext):
+    current_value = context.get_state(lambda: 0)
+    operation = context.operation_name
+    if operation == "add":
+        amount = context.get_input()
+        current_value += amount
+    elif operation == "reset":
+        current_value = 0
+    elif operation == "get":
+        context.set_result(current_value)
+    context.set_state(current_value)
+
+
+main = df.Entity.create(entity_function)
+```
+
+copied from https://learn.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-entities?tabs=python#define-entities
+
+---
+
+class: center, middle
+
+# Thanks!
+
